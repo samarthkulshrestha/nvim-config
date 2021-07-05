@@ -115,6 +115,9 @@ set wildmenu
 " Highlight the line on which the cursor lives.
 set cursorline
 
+" Highlight the column on which the cursor lives.
+set cursorcolumn
+
 " If lightline/airline is enabled, don't show mode under it
 set noshowmode
 
