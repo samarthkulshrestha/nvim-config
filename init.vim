@@ -7,6 +7,8 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'ervandew/supertab'
 
+Plug 'Yggdroot/indentLine'
+
 " Plug 'sheerun/vim-polyglot'
 Plug 'herringtondarkholme/yats.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
@@ -590,6 +592,9 @@ inoremap ' ''<esc>i
 inoremap " ""<esc>i
 inoremap $4 {<esc>o}<esc>O
 
+" Highlight parentheses
+hi MatchParen guifg=NONE guibg=NONE gui=underline cterm=underline
+
 " Make ci( work like quotes do
 function! New_cib()
     if search("(","bn") == line(".")
@@ -665,23 +670,25 @@ endfunc
 " => HTML/jsx section
 """"""""""""""""""""""""""""""
 
-command! -nargs=1 Itag execute "normal o\<<args>\>\<\/<args>\>\<--\><esc>T>;"
+command! -nargs=1 Itag execute "normal a\<<args>\>\<\/<args>\>\<--\><esc>T>;"
 
 autocmd FileType html nnoremap ;! i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
-autocmd FileType html inoremap ;d <esc>o<div></div><--><esc>FdT>i
-autocmd FileType html inoremap ;n <esc>o<nav></nav><--><esc>FnT>i
-autocmd FileType html inoremap ;s <esc>o<section></section><--><esc>FsT>i
-autocmd FileType html inoremap ;l <esc>o<link rel="stylesheet" href=""><--><esc>F"i
-autocmd FileType html inoremap ;1 <esc>o<h1></h1><--><esc>FhT>i
-autocmd FileType html inoremap ;2 <esc>o<h2></h2><--><esc>FhT>i
-autocmd FileType html inoremap ;3 <esc>o<h3></h3><--><esc>FhT>i
-autocmd FileType html inoremap ;4 <esc>o<h4></h4><--><esc>FhT>i
-autocmd FileType html inoremap ;5 <esc>o<h5></h5><--><esc>FhT>i
-autocmd FileType html inoremap ;6 <esc>o<h6></h6><--><esc>FhT>i
-autocmd FileType html inoremap ;p <esc>o<p></p><enter><enter><--><esc>2k0f<i
-autocmd FileType html inoremap ;b <esc>o<b></b><space><--><esc>FbT>i
-autocmd FileType html inoremap ;i <esc>o<em></em><space><--><esc>FeT>i
-autocmd FileType html inoremap ;u <esc>o<u></u><space><--><esc>FuT>i
+autocmd FileType html inoremap ;! <!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
+
+autocmd FileType html inoremap ;d <esc>a<div></div><--><esc>FdT>i
+autocmd FileType html inoremap ;n <esc>a<nav></nav><--><esc>FnT>i
+autocmd FileType html inoremap ;s <esc>a<section></section><--><esc>FsT>i
+autocmd FileType html inoremap ;l <esc>a<link rel="stylesheet" href=""><--><esc>F"i
+autocmd FileType html inoremap ;1 <esc>a<h1></h1><--><esc>FhT>i
+autocmd FileType html inoremap ;2 <esc>a<h2></h2><--><esc>FhT>i
+autocmd FileType html inoremap ;3 <esc>a<h3></h3><--><esc>FhT>i
+autocmd FileType html inoremap ;4 <esc>a<h4></h4><--><esc>FhT>i
+autocmd FileType html inoremap ;5 <esc>a<h5></h5><--><esc>FhT>i
+autocmd FileType html inoremap ;6 <esc>a<h6></h6><--><esc>FhT>i
+autocmd FileType html inoremap ;p <esc>a<p></p><enter><enter><--><esc>2k0f<i
+autocmd FileType html inoremap ;b <esc>a<b></b><space><--><esc>FbT>i
+autocmd FileType html inoremap ;i <esc>a<em></em><space><--><esc>FeT>i
+autocmd FileType html inoremap ;u <esc>a<u></u><space><--><esc>FuT>i
 
 autocmd FileType html nnoremap <leader>;; :Itag 
 autocmd FileType javascript nnoremap <leader>;; :Itag 
@@ -877,8 +884,8 @@ map gS <Plug>Sneak_,
 map gs <Plug>Sneak_;
 
 " Change the colors
-highlight Sneak guifg=black guibg=#00C7DF ctermfg=black ctermbg=cyan
-highlight SneakScope guifg=red guibg=yellow ctermfg=red ctermbg=yellow
+highlight Sneak guifg=black guibg=#d3869b ctermfg=black ctermbg=magenta
+highlight SneakScope guifg=black guibg=#b8bb26 ctermfg=red ctermbg=green
 
 " Cool prompts
 " let g:sneak#prompt = '🕵 '
@@ -923,7 +930,7 @@ let g:vimwiki_list = [{'path': '~/secondbrain/',
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim Instant Markdown
+" => Vim Instant Markdown Preview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "let g:instant_markdown_slow = 1
@@ -939,3 +946,10 @@ let g:instant_markdown_autostart = 0
 "let g:instant_markdown_python = 1
 
 map <leader>md :InstantMarkdownPreview<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vim Instant Markdown
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:indentLine_setColors = 0
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
