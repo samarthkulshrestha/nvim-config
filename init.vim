@@ -19,10 +19,11 @@ Plug 'ap/vim-css-color'
 Plug 'chrismccord/bclose.vim'
 
 " Plug 'mattn/emmet-vim'
+Plug 'leafOfTree/vim-matchtag'
 
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'psf/black', { 'branch': 'stable' }
+" Plug 'psf/black', { 'branch': 'stable' }
 
 Plug 'preservim/nerdtree'
 " Plug 'unblevable/quick-scope'
@@ -90,6 +91,9 @@ set shell=/usr/bin/zsh
 " Removing delay
 set timeoutlen=1000 ttimeoutlen=0
 
+" Reload vim
+nnoremap <leader>sop :source %<cr>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -116,7 +120,7 @@ set wildmenu
 set cursorline
 
 " Highlight the column on which the cursor lives.
-set cursorcolumn
+" set cursorcolumn
 
 " If lightline/airline is enabled, don't show mode under it
 set noshowmode
@@ -242,6 +246,12 @@ set fillchars=vert::
 syntax enable
 
 " Set 256 colors
+if &term =~ '256color'
+    " Disable Background Color Erase (BCE) so that color schemes
+    " work properly when Vim is used inside tmux and GNU screen
+    set t_ut=
+endif
+
 set t_Co=256
 
 set guifont="Iosevka"
@@ -288,7 +298,7 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 
-" 1 tab == 2 spaces
+" 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
 
@@ -382,10 +392,10 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " => Status line
 """"""""""""""""""""""""""""""
 " Always show the status line
-set laststatus=2
+" set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -595,7 +605,7 @@ inoremap ' ''<esc>i
 inoremap " ""<esc>i
 inoremap $4 {<esc>o}<esc>O
 
-" Highlight parentheses
+" Highlight parentheses and tags
 hi MatchParen guifg=NONE guibg=NONE gui=underline cterm=underline
 
 " Make ci( work like quotes do
@@ -719,7 +729,7 @@ au FileType python map <buffer> <leader>C ?class
 au FileType python map <buffer> <leader>D ?def 
 
 " Autoformat with black
-autocmd BufWritePre *.py execute ':Black'
+" autocmd BufWritePre *.py execute ':Black'
 
 
 """"""""""""""""""""""""""""""
@@ -870,6 +880,7 @@ let g:lightline = {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
+autocmd BufEnter * :GitGutterEnable
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Sneak
@@ -956,3 +967,16 @@ map <leader>md :InstantMarkdownPreview<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:indentLine_setColors = 0
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Matchtag
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vim_matchtag_enable_by_default = 1
+let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'
+let g:vim_matchtag_both = 1
+
+highlight link matchTag Search
+highlight link matchTag MatchParen
+
+highlight matchTag gui=underline
