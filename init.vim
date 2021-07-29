@@ -5,54 +5,52 @@ set nocompatible
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'ervandew/supertab'
-
-Plug 'Yggdroot/indentLine'
-
+" Syntax plugins
 " Plug 'sheerun/vim-polyglot'
 Plug 'herringtondarkholme/yats.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'pangloss/vim-javascript'
 Plug 'vim-python/python-syntax'
+Plug 'tpope/vim-markdown'
+Plug 'jceb/vim-orgmode'
 
-Plug 'ap/vim-css-color'
-Plug 'chrismccord/bclose.vim'
+" Completion plugins
+" Plug 'ervandew/supertab'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Dev helers
 " Plug 'mattn/emmet-vim'
+Plug 'Yggdroot/indentLine'
+Plug 'ap/vim-css-color'
 Plug 'leafOfTree/vim-matchtag'
 
-" post install (yarn install | npm install) then load plugin only for editing supported files
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Auto formatting
 " Plug 'psf/black', { 'branch': 'stable' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
-Plug 'preservim/nerdtree'
+" VIM utils
 " Plug 'unblevable/quick-scope'
-
+Plug 'chrismccord/bclose.vim'
+Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'lambdalisue/suda.vim'
-" Plug 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-highlightedyank'
-Plug 'tpope/vim-markdown'
+Plug 'justinmk/vim-sneak'
+Plug 'tpope/vim-obsession'
+Plug 'vimwiki/vimwiki'
 
+" Git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
+" Colorschemes
 " Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
-
-Plug 'justinmk/vim-sneak'
-
-Plug 'jceb/vim-orgmode'
-Plug 'vimwiki/vimwiki'
-Plug 'tpope/vim-obsession'
-
-Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
-" Plug 'edkolev/tmuxline.vim'
 
 call plug#end()
 
@@ -75,7 +73,7 @@ au FocusGained,BufEnter * checktime
 let mapleader = " "
 
 " Fast saving
-nmap <leader>w :w!<cr>
+nnoremap <leader><cr> :w!<cr>
 
 " Write buffer through sudo (works on vim but not neovim)
 " cnoreabbrev w!! w !sudo -S tee % >/dev/null
@@ -140,7 +138,13 @@ endif
 set ruler
 
 " Height of the command bar
-set cmdheight=1
+set cmdheight=2
+
+" Lower update time
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
 " A buffer becomes hidden when it is abandoned
 set hidden
@@ -195,7 +199,7 @@ endif
 " Add a bit extra margin to the left
 set foldcolumn=1
 
-" Toggle vertical line
+" Toggle vertical line for keeping lines short
 set colorcolumn=
 fun! ToggleCC()
     if &cc == ''
@@ -275,7 +279,7 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
-" Transparency
+" Transparency in vim when using transparent terminals
 " hi! Normal ctermbg=NONE guibg=NONE
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -303,12 +307,17 @@ set shiftwidth=4
 set tabstop=4
 
 " Linebreak on 500 characters
-set lbr
-set tw=500
+" set lbr
+" set textwidth=80
 
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
+" Auto indent
+set ai
+
+" Smart indent
+set si
+
+" Line wrap
+set wrap
 
 " Always open new files in new tabs
 augroup open-tabs
@@ -356,7 +365,7 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 map <leader>ba :bufdo bd<cr>
 
 map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
+map <leader>hh :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -401,11 +410,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remap VIM bl to first non-blank character
-" map bl ^
-" Remap VIM el to first non-blank character
-" map el $h 
-
 " Move a line of text using Ctrl+[jk]
 nmap <C-j> mz:m+<cr>`z
 nmap <C-k> mz:m-2<cr>`z
@@ -429,7 +433,6 @@ endif
 " Idea borrowed from Luke Smith
 nmap <leader><leader> <esc>/<++><enter>
 nmap <leader>a $a<enter><++><esc>gcc
-" imap ;a $a<enter><++><esc>gcc
 
 imap ;c <esc>/<--><enter>"_c4l
 
@@ -449,8 +452,10 @@ map <leader>s? z=
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Notetaking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" Executes a shellscript that i wrote for notetaking
 autocmd BufWritePost *note-*.md silent !build_note %:p
+
+" Compile RMarkdown
 autocmd FileType rmd map <F7> :!echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -597,15 +602,7 @@ vnoremap $$ <esc>`>a"<esc>`<i"<esc>
 vnoremap $q <esc>`>a'<esc>`<i'<esc>
 vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
-" Map auto complete of (, ", ', [
-inoremap ( ()<esc>i
-inoremap [ []<esc>i
-inoremap { {}<esc>i
-inoremap ' ''<esc>i
-inoremap " ""<esc>i
-inoremap $4 {<esc>o}<esc>O
-
-" Highlight parentheses and tags
+" Highlight parentheses
 hi MatchParen guifg=NONE guibg=NONE gui=underline cterm=underline
 
 " Make ci( work like quotes do
@@ -648,7 +645,7 @@ iab xdate <C-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+set omnifunc=syntaxcomplete#Complete
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -683,11 +680,14 @@ endfunc
 " => HTML/jsx section
 """"""""""""""""""""""""""""""
 
+" `:Itag tagname` inserts the tag
 command! -nargs=1 Itag execute "normal a\<<args>\>\<\/<args>\>\<--\><esc>T>;"
 
+" HTML boilerplate with ;!
 autocmd FileType html nnoremap ;! i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
 autocmd FileType html inoremap ;! <!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
 
+" Cool keybinds, less powerful emmet-replacement lmao
 autocmd FileType html inoremap ;d <esc>a<div></div><--><esc>FdT>i
 autocmd FileType html inoremap ;n <esc>a<nav></nav><--><esc>FnT>i
 autocmd FileType html inoremap ;s <esc>a<section></section><--><esc>FsT>i
@@ -698,10 +698,11 @@ autocmd FileType html inoremap ;3 <esc>a<h3></h3><--><esc>FhT>i
 autocmd FileType html inoremap ;4 <esc>a<h4></h4><--><esc>FhT>i
 autocmd FileType html inoremap ;5 <esc>a<h5></h5><--><esc>FhT>i
 autocmd FileType html inoremap ;6 <esc>a<h6></h6><--><esc>FhT>i
-autocmd FileType html inoremap ;p <esc>a<p></p><enter><enter><--><esc>2k0f<i
-autocmd FileType html inoremap ;b <esc>a<b></b><space><--><esc>FbT>i
+autocmd FileType html inoremap ;p <esc>a<p\></p><enter><enter><--><esc>2k0f<i
+autocmd FileType html inoremap ;a <esc>a<a href=""></a><--><esc>0ci"
+autocmd FileType html inoremap ;b <esc>a<b\></b><space><--><esc>FbT>i
 autocmd FileType html inoremap ;i <esc>a<em></em><space><--><esc>FeT>i
-autocmd FileType html inoremap ;u <esc>a<u></u><space><--><esc>FuT>i
+autocmd FileType html inoremap ;u <esc>a<u\></u><space><--><esc>FuT>i
 
 autocmd FileType html nnoremap <leader>;; :Itag 
 autocmd FileType javascript nnoremap <leader>;; :Itag 
@@ -780,12 +781,14 @@ au FileType gitcommit call setpos('.', [0, 1, 1, 0])
 """"""""""""""""""""""""""""""
 " => Twig section
 """"""""""""""""""""""""""""""
+" Set twig to use same hightlighting as html
 autocmd BufRead *.twig set syntax=html filetype=html
 
 
 """"""""""""""""""""""""""""""
 " => Markdown
 """"""""""""""""""""""""""""""
+" Disable markdown folding cuz it is annoying af
 let vim_markdown_folding_disabled = 1
 
 
@@ -794,13 +797,6 @@ let vim_markdown_folding_disabled = 1
 """"""""""""""""""""""""""""""
 let g:netrw_browse_split = 0
 let g:netrw_altfile = 1
-
-
-""""""""""""""""""""""""""""""
-" => Deoplete
-""""""""""""""""""""""""""""""
-" let g:deoplete#enable_at_startup = 1
-" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 
 """"""""""""""""""""""""""""""
@@ -818,7 +814,7 @@ nmap <leader>fc :Commits<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:NERDTreeWinPos = "right"
 let NERDTreeShowHidden=1
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
+let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '.git']
 let g:NERDTreeWinSize=35
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark<Space>
@@ -915,6 +911,7 @@ map T <Plug>Sneak_T
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tmuxline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Gives a tmux statusline config matching to the vim statusline
 " let g:tmuxline_preset = {
 "       \'a'    : '#S',
 "       \'b'    : '#W',
@@ -929,6 +926,7 @@ map T <Plug>Sneak_T
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Prettier
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" So that I can be a good lazy dev
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
 
@@ -936,7 +934,7 @@ let g:prettier#autoformat_require_pragma = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VimWiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" Notetaking madness
 let g:vimwiki_list = [{'path': '~/secondbrain/',
                       \ 'syntax': 'markdown', 'ext': '.md',
                       \ 'path_html': '~/secondbrain_html/',
@@ -944,27 +942,9 @@ let g:vimwiki_list = [{'path': '~/secondbrain/',
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim Instant Markdown Preview
+" => Vim Indent Line
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"let g:instant_markdown_slow = 1
-let g:instant_markdown_autostart = 0
-"let g:instant_markdown_open_to_the_world = 1
-"let g:instant_markdown_allow_unsafe_content = 1
-"let g:instant_markdown_allow_external_content = 0
-"let g:instant_markdown_mathjax = 1
-"let g:instant_markdown_mermaid = 1
-"let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-"let g:instant_markdown_autoscroll = 0
-"let g:instant_markdown_port = 8888
-"let g:instant_markdown_python = 1
-
-map <leader>md :InstantMarkdownPreview<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim Instant Markdown
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Get em fancy indent guides
 let g:indentLine_setColors = 0
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
@@ -979,4 +959,34 @@ let g:vim_matchtag_both = 1
 highlight link matchTag Search
 highlight link matchTag MatchParen
 
+" Show an underline instead of hightlighting the tags
+" just a lil more subtle
 highlight matchTag gui=underline
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => CoC
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
