@@ -96,7 +96,14 @@ nnoremap <leader>sop :source %<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Termguicolors
+" Fix highlighting in tmux
+" if $TERM =~# '256color' && ( $TERM =~# '^screen'  || $TERM =~# '^tmux' )
+"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"     set termguicolors
+" endif
+
+" termguicolors
 set termguicolors
 
 " Set 7 lines to the cursor - when moving vertically using j/k
@@ -249,7 +256,7 @@ set fillchars=vert::
 " Enable syntax highlighting
 syntax enable
 
-" Set 256 colors
+" Disable BCE
 if &term =~ '256color'
     " Disable Background Color Erase (BCE) so that color schemes
     " work properly when Vim is used inside tmux and GNU screen
@@ -261,6 +268,8 @@ set t_Co=256
 set guifont="Iosevka"
 
 " Colorscheme
+let &t_8f='[38;2;%lu;%lu;%lum'
+let &t_8b='[48;2;%lu;%lu;%lum'
 colorscheme gruvbox
 let g:gruvbox_contrast_dark='hard'
 set background=dark
