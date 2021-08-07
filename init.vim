@@ -7,12 +7,11 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " Syntax plugins
 " Plug 'sheerun/vim-polyglot'
-Plug 'herringtondarkholme/yats.vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'pangloss/vim-javascript'
-Plug 'vim-python/python-syntax'
-Plug 'tpope/vim-markdown'
-Plug 'jceb/vim-orgmode'
+Plug 'herringtondarkholme/yats.vim', {'for': 'typescript'}
+Plug 'MaxMEllon/vim-jsx-pretty', {'for': ['javascript', 'typescript', 'jsx', 'tsx']}
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'vim-python/python-syntax', {'for': 'python'}
+Plug 'tpope/vim-markdown', {'for': 'markdown'}
 
 " Completion plugins
 " Plug 'ervandew/supertab'
@@ -22,7 +21,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'mattn/emmet-vim'
 Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-css-color'
-Plug 'leafOfTree/vim-matchtag'
+Plug 'leafOfTree/vim-matchtag', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
 
 " Auto formatting
 " Plug 'psf/black', { 'branch': 'stable' }
@@ -885,7 +884,6 @@ let g:lightline = {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
-autocmd BufEnter * :GitGutterEnable
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Sneak
