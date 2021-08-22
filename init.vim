@@ -50,6 +50,7 @@ Plug 'airblade/vim-gitgutter'
 " Colorschemes
 " Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
+Plug 'frenzyexists/aquarium-vim', { 'branch': 'vimscript-version' }
 
 call plug#end()
 
