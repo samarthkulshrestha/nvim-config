@@ -12,6 +12,7 @@ Plug 'MaxMEllon/vim-jsx-pretty', {'for': ['javascript', 'typescript', 'jsx', 'ts
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'vim-python/python-syntax', {'for': 'python'}
 Plug 'tpope/vim-markdown', {'for': 'markdown'}
+Plug 'sophacles/vim-processing', {'for': 'processing'}
 
 " Completion plugins
 " Plug 'ervandew/supertab'
@@ -50,9 +51,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Colorschemes
-" Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
-Plug 'frenzyexists/aquarium-vim', { 'branch': 'vimscript-version' }
 Plug 'Murtaza-Udaipurwala/gruvqueen'
 
 call plug#end()
@@ -975,7 +974,6 @@ let g:vimwiki_list = [{'path': '~/secondbrain/',
 " => Vim Indent Line
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Get em fancy indent guides
-let g:indentLine_setColors = 0
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 
