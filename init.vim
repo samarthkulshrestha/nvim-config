@@ -33,7 +33,9 @@ Plug 'chrismccord/bclose.vim'
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'lambdalisue/suda.vim'
@@ -51,6 +53,7 @@ Plug 'airblade/vim-gitgutter'
 " Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'morhetz/gruvbox'
 Plug 'frenzyexists/aquarium-vim', { 'branch': 'vimscript-version' }
+Plug 'Murtaza-Udaipurwala/gruvqueen'
 
 call plug#end()
 
@@ -270,9 +273,21 @@ set guifont="Iosevka"
 " Colorscheme
 let &t_8f='[38;2;%lu;%lu;%lum'
 let &t_8b='[48;2;%lu;%lu;%lum'
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='hard'
+
 set background=dark
+let g:gruvqueen_transparent_background = v:false
+let g:gruvqueen_background_color = '#1d2021'
+let g:gruvqueen_disable_bold = v:false
+let g:gruvqueen_italic_comments = v:true
+let g:gruvqueen_italic_keywords = v:true
+let g:gruvqueen_italic_functions = v:true
+let g:gruvqueen_italic_variables = v:true
+let g:gruvqueen_invert_selection = v:true
+let g:gruvqueen_style = 'mix' " possible values: 'original', 'mix', 'material'
+
+" let g:gruvbox_contrast_dark='hard'
+colorscheme gruvbox
+colorscheme gruvqueen
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -844,30 +859,37 @@ au FileType mako vmap Si S"i${ _(<esc>2f"a) }<esc>
 " Highlighted yank (-1 for persistent)
 let g:highlightedyank_highlight_duration = 400
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => airline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_theme='atomic'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:lightline = {
-      \ 'colorscheme': 'gruvbox',
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-      \ },
-      \ 'separator': { 'left': ' ', 'right': ' ' },
-      \ 'subseparator': { 'left': ' ', 'right': ' ' }
-      \ }
+" let g:lightline = {
+"       \ 'colorscheme': 'one',
+"       \ 'active': {
+"       \   'left': [ ['mode', 'paste'],
+"       \             ['fugitive', 'readonly', 'filename', 'modified'] ],
+"       \   'right': [ [ 'lineinfo' ], ['percent'] ]
+"       \ },
+"       \ 'component': {
+"       \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
+"       \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+"       \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+"       \ },
+"       \ 'component_visible_condition': {
+"       \   'readonly': '(&filetype!="help"&& &readonly)',
+"       \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+"       \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+"       \ },
+"       \ 'separator': { 'left': ' ', 'right': ' ' },
+"       \ 'subseparator': { 'left': ' ', 'right': ' ' }
+"       \ }
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
