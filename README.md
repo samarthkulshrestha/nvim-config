@@ -1,6 +1,6 @@
 # Samarth Kulshrestha's NeoVim configuration
 
-![screenshot](./scr)
+![screenshot](/screenshot.png)
 
 Here is my [NeoVim](https://neovim.io) configuration.
 This config uses [vim-plug](https://github.com/junegunn/vim-plug) for managing plugins.
