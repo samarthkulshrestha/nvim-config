@@ -1,5 +1,7 @@
 # Samarth Kulshrestha's NeoVim configuration
 
+![screenshot](./scr)
+
 Here is my [NeoVim](https://neovim.io) configuration.
 This config uses [vim-plug](https://github.com/junegunn/vim-plug) for managing plugins.
 Refer to the vim-plug readme for instructions.
