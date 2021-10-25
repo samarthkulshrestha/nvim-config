@@ -11,30 +11,28 @@ Plug 'herringtondarkholme/yats.vim', {'for': 'typescript'}
 Plug 'MaxMEllon/vim-jsx-pretty', {'for': ['javascript', 'typescript', 'jsx', 'tsx']}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'vim-python/python-syntax', {'for': 'python'}
-Plug 'tpope/vim-markdown', {'for': 'markdown'}
 Plug 'sophacles/vim-processing', {'for': 'processing'}
+Plug 'rust-lang/rust.vim', {'for': 'rust'}
+Plug 'cespare/vim-toml', {'for': 'toml'}
 
 " Completion plugins
-" Plug 'ervandew/supertab'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Dev helers
-" Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
 Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-css-color'
 Plug 'leafOfTree/vim-matchtag', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
 
 " Auto formatting
-" Plug 'psf/black', { 'branch': 'stable' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " VIM utils
-" Plug 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
 Plug 'chrismccord/bclose.vim'
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Plug 'itchyny/lightline.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
@@ -53,6 +51,11 @@ Plug 'airblade/vim-gitgutter'
 " Colorschemes
 Plug 'morhetz/gruvbox'
 Plug 'Murtaza-Udaipurwala/gruvqueen'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'ayu-theme/ayu-vim'
+
+" Misc
+" Plug 'edkolev/tmuxline.vim'
 
 call plug#end()
 
@@ -98,15 +101,10 @@ nnoremap <leader>sop :source %<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Fix highlighting in tmux
-" if $TERM =~# '256color' && ( $TERM =~# '^screen'  || $TERM =~# '^tmux' )
-"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"     set termguicolors
-" endif
-
 " termguicolors
-set termguicolors
+if (has("termguicolors"))
+  set termguicolors
+endif
 
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
@@ -272,21 +270,10 @@ set guifont="Iosevka"
 " Colorscheme
 let &t_8f='[38;2;%lu;%lu;%lum'
 let &t_8b='[48;2;%lu;%lu;%lum'
-
 set background=dark
-let g:gruvqueen_transparent_background = v:false
-let g:gruvqueen_background_color = '#1d2021'
-let g:gruvqueen_disable_bold = v:false
-let g:gruvqueen_italic_comments = v:true
-let g:gruvqueen_italic_keywords = v:true
-let g:gruvqueen_italic_functions = v:true
-let g:gruvqueen_italic_variables = v:true
-let g:gruvqueen_invert_selection = v:true
-let g:gruvqueen_style = 'mix' " possible values: 'original', 'mix', 'material'
 
-" let g:gruvbox_contrast_dark='hard'
-colorscheme gruvbox
-colorscheme gruvqueen
+let ayucolor="dark"
+colorscheme ayu
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -702,30 +689,8 @@ endfunc
 """"""""""""""""""""""""""""""
 " => HTML/jsx section
 """"""""""""""""""""""""""""""
-
 " `:Itag tagname` inserts the tag
 command! -nargs=1 Itag execute "normal a\<<args>\>\<\/<args>\>\<--\><esc>T>;"
-
-" HTML boilerplate with ;!
-autocmd FileType html nnoremap ;! i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
-autocmd FileType html inoremap ;! <!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter></head><enter><body><enter></body><enter></html><esc>5G0f<;i
-
-" Cool keybinds, less powerful emmet-replacement lmao
-autocmd FileType html inoremap ;d <esc>a<div></div><--><esc>FdT>i
-autocmd FileType html inoremap ;n <esc>a<nav></nav><--><esc>FnT>i
-autocmd FileType html inoremap ;s <esc>a<section></section><--><esc>FsT>i
-autocmd FileType html inoremap ;l <esc>a<link rel="stylesheet" href=""><--><esc>F"i
-autocmd FileType html inoremap ;1 <esc>a<h1></h1><--><esc>FhT>i
-autocmd FileType html inoremap ;2 <esc>a<h2></h2><--><esc>FhT>i
-autocmd FileType html inoremap ;3 <esc>a<h3></h3><--><esc>FhT>i
-autocmd FileType html inoremap ;4 <esc>a<h4></h4><--><esc>FhT>i
-autocmd FileType html inoremap ;5 <esc>a<h5></h5><--><esc>FhT>i
-autocmd FileType html inoremap ;6 <esc>a<h6></h6><--><esc>FhT>i
-autocmd FileType html inoremap ;p <esc>a<p\></p><enter><enter><--><esc>2k0f<i
-autocmd FileType html inoremap ;a <esc>a<a href=""></a><--><esc>0ci"
-autocmd FileType html inoremap ;b <esc>a<b\></b><space><--><esc>FbT>i
-autocmd FileType html inoremap ;i <esc>a<em></em><space><--><esc>FeT>i
-autocmd FileType html inoremap ;u <esc>a<u\></u><space><--><esc>FuT>i
 
 autocmd FileType html nnoremap <leader>;; :Itag 
 autocmd FileType javascript nnoremap <leader>;; :Itag 
@@ -753,7 +718,7 @@ au FileType python map <buffer> <leader>C ?class
 au FileType python map <buffer> <leader>D ?def 
 
 " Autoformat with black
-" autocmd BufWritePre *.py execute ':Black'
+" autocmd BufWritePre *.py execute ':!black .'
 
 
 """"""""""""""""""""""""""""""
@@ -813,6 +778,7 @@ autocmd BufRead *.twig set syntax=html filetype=html
 """"""""""""""""""""""""""""""
 " Disable markdown folding cuz it is annoying af
 let vim_markdown_folding_disabled = 1
+let g:markdown_syntax_conceal = 0
 
 
 """"""""""""""""""""""""""""""
@@ -825,7 +791,7 @@ let g:netrw_altfile = 1
 """"""""""""""""""""""""""""""
 " => FZF
 """"""""""""""""""""""""""""""
-nmap <leader>. :Files<cr>
+nmap <leader><leader> :Files<cr>
 nmap <leader>ff :Files<cr>
 nmap <leader>/ :Ag 
 nmap <leader>fb :Buffers<cr>
@@ -858,54 +824,33 @@ au FileType mako vmap Si S"i${ _(<esc>2f"a) }<esc>
 " Highlighted yank (-1 for persistent)
 let g:highlightedyank_highlight_duration = 400
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_theme='atomic'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => lightline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:lightline = {
-"       \ 'colorscheme': 'one',
-"       \ 'active': {
-"       \   'left': [ ['mode', 'paste'],
-"       \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-"       \   'right': [ [ 'lineinfo' ], ['percent'] ]
-"       \ },
-"       \ 'component': {
-"       \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
-"       \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-"       \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-"       \ },
-"       \ 'component_visible_condition': {
-"       \   'readonly': '(&filetype!="help"&& &readonly)',
-"       \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-"       \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-"       \ },
-"       \ 'separator': { 'left': ' ', 'right': ' ' },
-"       \ 'subseparator': { 'left': ' ', 'right': ' ' }
-"       \ }
+let g:airline#extensions#tabline#left_alt_sep = ' '
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline_theme='ayu_mirage'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Emmet
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:user_emmet_install_global = 0
-" autocmd FileType html,css EmmetInstall
-" autocmd Filetype html imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-" autocmd Filetype css imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-" autocmd Filetype js nmap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+autocmd Filetype html imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+autocmd Filetype css imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+autocmd Filetype js nmap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Git gutter (Git diff)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:gitgutter_enabled=0
+let g:gitgutter_enabled=1
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Sneak
