@@ -5,21 +5,14 @@ set nocompatible
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Syntax plugins
-" Plug 'sheerun/vim-polyglot'
-Plug 'herringtondarkholme/yats.vim', {'for': 'typescript'}
-Plug 'MaxMEllon/vim-jsx-pretty', {'for': ['javascript', 'typescript', 'jsx', 'tsx']}
-Plug 'pangloss/vim-javascript', {'for': 'javascript'}
-Plug 'vim-python/python-syntax', {'for': 'python'}
-Plug 'sophacles/vim-processing', {'for': 'processing'}
-Plug 'rust-lang/rust.vim', {'for': 'rust'}
-Plug 'cespare/vim-toml', {'for': 'toml'}
+" Syntax
+Plug 'sheerun/vim-polyglot'
 
-" Completion plugins
+" Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Dev helers
-Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
+" Dev
+" Plug 'mattn/emmet-vim', {'for': ['html','css', 'javascript', 'typescript', 'jsx', 'tsx']}
 Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-css-color'
 Plug 'leafOfTree/vim-matchtag', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
@@ -30,11 +23,9 @@ Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 " VIM utils
 Plug 'unblevable/quick-scope'
 Plug 'chrismccord/bclose.vim'
-Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'lambdalisue/suda.vim'
@@ -49,10 +40,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Colorschemes
-Plug 'morhetz/gruvbox'
-Plug 'Murtaza-Udaipurwala/gruvqueen'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'ayu-theme/ayu-vim'
+" Plug 'morhetz/gruvbox'
+Plug 'kuntau/ayu-vim'
 
 " Misc
 " Plug 'edkolev/tmuxline.vim'
@@ -247,6 +236,10 @@ endif
 
 let g:one_allow_italics = 1
 
+" Overriding vim's italic codes
+set t_ZH=^[[3m
+set t_ZR=^[[23m
+
 set fillchars=vert::
 
 
@@ -273,6 +266,11 @@ let &t_8b='[48;2;%lu;%lu;%lum'
 set background=dark
 
 let ayucolor="dark"
+let ayu_comment_italic=1
+let ayu_string_italic=0
+let ayu_type_italic=1
+let ayu_keyword_italic=1
+
 colorscheme ayu
 
 " Set extra options when running in GUI mode
@@ -334,6 +332,7 @@ augroup open-tabs
     au!
     au VimEnter * ++nested if !&diff | tab all | tabfirst | endif
 augroup end
+
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -407,16 +406,6 @@ endtry
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-" Always show the status line
-" set laststatus=2
-
-" Format the status line
-" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -438,13 +427,6 @@ endfun
 if has("autocmd")
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
-
-" Guides for navigating around the document
-" Idea borrowed from Luke Smith
-nmap <leader><leader> <esc>/<++><enter>
-nmap <leader>a $a<enter><++><esc>gcc
-
-imap ;c <esc>/<--><enter>"_c4l
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -490,14 +472,6 @@ set clipboard=unnamedplus
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Returns true if paste mode is enabled
-" function! HasPaste()
-"     if &paste
-"         return 'PASTE MODE  '
-"     endif
-"     return ''
-" endfunction
-
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
@@ -742,35 +716,16 @@ autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 let g:jsx_ext_required = 0 
 let g:vim_jsx_pretty_colorful_config = 1
 
-function! JavaScriptFold() 
-    setl foldmethod=syntax
-    setl foldlevelstart=1
-    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+" function! JavaScriptFold() 
+"     setl foldmethod=syntax
+"     setl foldlevelstart=1
+"     syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
 
-    function! FoldText()
-        return substitute(getline(v:foldstart), '{.*', '{...}', '')
-    endfunction
-    setl foldtext=FoldText()
-endfunction
-
-
-""""""""""""""""""""""""""""""
-" => CoffeeScript section
-"""""""""""""""""""""""""""""""
-function! CoffeeScriptFold()
-    setl foldmethod=indent
-    setl foldlevelstart=1
-endfunction
-au FileType coffee call CoffeeScriptFold()
-
-au FileType gitcommit call setpos('.', [0, 1, 1, 0])
-
-
-""""""""""""""""""""""""""""""
-" => Twig section
-""""""""""""""""""""""""""""""
-" Set twig to use same hightlighting as html
-autocmd BufRead *.twig set syntax=html filetype=html
+"     function! FoldText()
+"         return substitute(getline(v:foldstart), '{.*', '{...}', '')
+"     endfunction
+"     setl foldtext=FoldText()
+" endfunction
 
 
 """"""""""""""""""""""""""""""
@@ -791,8 +746,15 @@ let g:netrw_altfile = 1
 """"""""""""""""""""""""""""""
 " => FZF
 """"""""""""""""""""""""""""""
-nmap <leader><leader> :Files<cr>
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+let g:fzf_buffers_jump = 1
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+let g:fzf_tags_command = 'ctags -R'
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+nmap <leader><leader> :GFiles<cr>
 nmap <leader>ff :Files<cr>
+nmap <leader>cc :Tags<cr>
 nmap <leader>/ :Ag 
 nmap <leader>fb :Buffers<cr>
 nmap <leader>fc :Commits<cr>
@@ -801,13 +763,13 @@ nmap <leader>fc :Commits<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Nerd Tree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=1
-let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '.git']
-let g:NERDTreeWinSize=35
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark<Space>
-map <leader>nf :NERDTreeFind<cr>
+" let g:NERDTreeWinPos = "right"
+" let NERDTreeShowHidden=1
+" let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '.git']
+" let g:NERDTreeWinSize=35
+" map <leader>nn :NERDTreeToggle<cr>
+" map <leader>nb :NERDTreeFromBookmark<Space>
+" map <leader>nf :NERDTreeFind<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -826,23 +788,40 @@ let g:highlightedyank_highlight_duration = 400
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => airline
+" => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = ' '
-let g:airline#extensions#tabline#formatter = 'default'
-let g:airline_theme='ayu_mirage'
-
+let g:lightline = {
+      \ 'colorscheme': 'ayu_mirage',
+      \ 'active': {
+      \   'left': [ ['mode', 'paste'],
+      \             ['fugitive', 'readonly', 'filename', 'modified' ],
+      \             [ 'charvaluehex' ] ],
+      \   'right': [ [ 'lineinfo' ], ['percent'],
+      \              ['fileformat', 'fileencoding', 'filetype'] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"RO":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}',
+      \   'charvaluehex': '0x%B'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left': ' ', 'right': ' ' },
+      \ 'subseparator': { 'left': ' ', 'right': ' ' }
+      \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Emmet
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-autocmd Filetype html imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-autocmd Filetype css imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-autocmd Filetype js nmap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+" let g:user_emmet_install_global = 0
+" autocmd FileType html,css EmmetInstall
+" autocmd Filetype html imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+" autocmd Filetype css imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+" autocmd Filetype js nmap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -863,19 +842,14 @@ let g:sneak#use_ic_scs = 1
 " immediately move to the next instance of search, if you move the cursor sneak is back to default behavior
 let g:sneak#s_next = 1
 
-" remap so I can use , and ; with f and t
-map gS <Plug>Sneak_,
-map gs <Plug>Sneak_;
-
 " Change the colors
-highlight Sneak guifg=black guibg=#d3869b ctermfg=black ctermbg=magenta
-highlight SneakScope guifg=black guibg=#b8bb26 ctermfg=red ctermbg=green
+highlight Sneak guifg=black guibg=#53BDFA ctermfg=black ctermbg=magenta
+highlight SneakScope guifg=black guibg=#C2D94C ctermfg=red ctermbg=green
 
 " Cool prompts
-" let g:sneak#prompt = '🕵 '
 let g:sneak#prompt = 's> '
 
-" I like quickscope better for this since it keeps me in the scope of a single line
+" quickscope func
 map f <Plug>Sneak_f
 map F <Plug>Sneak_F
 map t <Plug>Sneak_t
@@ -920,6 +894,8 @@ let g:vimwiki_list = [{'path': '~/secondbrain/',
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Get em fancy indent guides
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_showFirstIndentLevel = 0
+let g:indentLine_setColors = 0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
