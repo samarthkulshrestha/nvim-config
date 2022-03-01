@@ -6,19 +6,15 @@ set nocompatible
 call plug#begin('~/.local/share/nvim/plugged')
 
 " Syntax
-Plug 'sheerun/vim-polyglot'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Dev
-" Plug 'mattn/emmet-vim', {'for': ['html','css', 'javascript', 'typescript', 'jsx', 'tsx']}
 Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-css-color'
 Plug 'leafOfTree/vim-matchtag', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
-
-" Auto formatting
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " VIM utils
 Plug 'unblevable/quick-scope'
@@ -33,15 +29,16 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-highlightedyank'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-obsession'
-Plug 'vimwiki/vimwiki'
+" Plug 'vimwiki/vimwiki'
 
 " Git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Colorschemes
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 " Plug 'morhetz/gruvbox'
-Plug 'kuntau/ayu-vim'
+" Plug 'kuntau/ayu-vim'
 
 " Misc
 " Plug 'edkolev/tmuxline.vim'
@@ -265,13 +262,8 @@ let &t_8f='[38;2;%lu;%lu;%lum'
 let &t_8b='[48;2;%lu;%lu;%lum'
 set background=dark
 
-let ayucolor="dark"
-let ayu_comment_italic=1
-let ayu_string_italic=0
-let ayu_type_italic=1
-let ayu_keyword_italic=1
-
-colorscheme ayu
+let g:tokyonight_style = "night"
+colorscheme tokyonight
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -734,6 +726,8 @@ let g:vim_jsx_pretty_colorful_config = 1
 " Disable markdown folding cuz it is annoying af
 let vim_markdown_folding_disabled = 1
 let g:markdown_syntax_conceal = 0
+autocmd FileType md set concealcursor="nc"
+autocmd FileType rmd set concealcursor="nc"
 
 
 """"""""""""""""""""""""""""""
@@ -791,7 +785,7 @@ let g:highlightedyank_highlight_duration = 400
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lightline = {
-      \ 'colorscheme': 'ayu_mirage',
+      \ 'colorscheme': 'tokyonight',
       \ 'active': {
       \   'left': [ ['mode', 'paste'],
       \             ['fugitive', 'readonly', 'filename', 'modified' ],
@@ -843,8 +837,8 @@ let g:sneak#use_ic_scs = 1
 let g:sneak#s_next = 1
 
 " Change the colors
-highlight Sneak guifg=black guibg=#53BDFA ctermfg=black ctermbg=magenta
-highlight SneakScope guifg=black guibg=#C2D94C ctermfg=red ctermbg=green
+" highlight Sneak guifg=black guibg=#53BDFA ctermfg=black ctermbg=magenta
+" highlight SneakScope guifg=black guibg=#C2D94C ctermfg=red ctermbg=green
 
 " Cool prompts
 let g:sneak#prompt = 's> '
@@ -872,21 +866,17 @@ map T <Plug>Sneak_T
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Prettier
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" So that I can be a good lazy dev
-let g:prettier#autoformat = 1
-let g:prettier#autoformat_require_pragma = 0
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VimWiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Notetaking madness
-let g:vimwiki_list = [{'path': '~/secondbrain/',
-                      \ 'syntax': 'markdown', 'ext': '.md',
-                      \ 'path_html': '~/secondbrain_html/',
-                      \ 'custom_wiki2html': '~/scripts/wiki2html.sh'}]
+" let g:vimwiki_list = [{'path': '~/secondbrain/',
+"             \ 'template_path': '~/secondbrain/templates/',
+"             \ 'template_default': 'default',
+"             \ 'syntax': 'markdown',
+"             \ 'ext': '.md',
+"             \ 'path_html': '~/secondbrain/site_html/',
+"             \ 'custom_wiki2html': 'vimwiki_markdown',
+"             \ 'template_ext': '.tpl'}]
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -939,3 +929,29 @@ endif
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => TreeSitter
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { "bash", "c", "cmake", "cpp", "comment", "cpp", "css", "graphql", "html", "http", "javascript", "json", "json5", "latex", "lua", "make", "ninja", "python", "regex", "rust", "toml", "tsx", "typescript", "vim", "yaml" },
+
+  -- Install languages synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- List of parsers to ignore installing
+  ignore_install = {},
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+    -- list of languages that will be disabled
+    disable = {},
+    -- runs `:h syntax` and tree-sitter at the same time
+    additional_vim_regex_highlighting = false,
+  }
+}
+EOF
