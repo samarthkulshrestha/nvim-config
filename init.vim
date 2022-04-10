@@ -5,45 +5,19 @@ set nocompatible
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Syntax
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-" Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-" Dev
-Plug 'Yggdroot/indentLine'
-Plug 'ap/vim-css-color'
-Plug 'leafOfTree/vim-matchtag', {'for': ['html', 'javascript', 'typescript', 'jsx', 'tsx']}
-
-" VIM utils
-Plug 'unblevable/quick-scope'
-Plug 'chrismccord/bclose.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'ghifarit53/tokyonight-vim'
 Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'lambdalisue/suda.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'lambdalisue/suda.vim'
 Plug 'machakann/vim-highlightedyank'
-Plug 'justinmk/vim-sneak'
-Plug 'tpope/vim-obsession'
-" Plug 'vimwiki/vimwiki'
+Plug 'tpope/vim-commentary'
+Plug 'unblevable/quick-scope'
 
-" Git
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-
-" Colorschemes
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-" Plug 'morhetz/gruvbox'
-" Plug 'kuntau/ayu-vim'
-
-" Misc
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug 'edkolev/tmuxline.vim'
 
 call plug#end()
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -66,11 +40,6 @@ let mapleader = " "
 " Fast saving
 nnoremap <leader><cr> :w!<cr>
 
-" Write buffer through sudo (works on vim but not neovim)
-" cnoreabbrev w!! w !sudo -S tee % >/dev/null
-" Neovim: suda plugin
-cnoreabbrev w!! w suda://%
-
 " Remove timeout for partially typed commands
 set notimeout
 
@@ -82,6 +51,9 @@ set timeoutlen=1000 ttimeoutlen=0
 
 " Reload vim
 nnoremap <leader>sop :source %<cr>
+
+" Write buffer through sudo
+cnoreabbrev w!! w suda://%
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -102,7 +74,7 @@ set relativenumber
 
 " Display different types of white spaces.
 set list
-set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
+set listchars=tab:>+,trail:+,extends:>,precedes:<
 
 " Turn on the Wild menu
 set wildmenu
@@ -127,9 +99,6 @@ else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store,*/node_modules/*
 endif
 
-"Always show current position
-set ruler
-
 " Height of the command bar
 set cmdheight=2
 
@@ -143,8 +112,9 @@ set shortmess+=c
 set hidden
 
 " Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
+" set backspace=eol,start,indent
+" set whichwrap+=<,>,h,l
+set backspace=2
 
 " Ignore case when searching
 set ignorecase
@@ -164,10 +134,13 @@ augroup END
 set hlsearch
 
 " Makes search act like search in modern browsers
-set incsearch 
+set incsearch
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
+
+" Limit ShaDa (faster startup)
+set shada='20,<50,s10
 
 " For regular expressions turn magic on
 set magic
@@ -184,13 +157,21 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
+" Add a bit extra margin to the left
+set foldcolumn=0
+
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+    set t_Co=16
 endif
 
-" Add a bit extra margin to the left
-set foldcolumn=1
+let g:one_allow_italics = 1
+
+" Overriding vim's italic codes
+set t_ZH=^[[3m
+set t_ZR=^[[23m
+
+set fillchars=vert::
 
 " Toggle vertical line for keeping lines short
 set colorcolumn=
@@ -224,20 +205,6 @@ endfunction
 " hightlight the characters with long lines automatically on md and org files
 autocmd FileType rmd :call<SID>LongLineHLToggle()
 autocmd FileType md :call<SID>LongLineHLToggle()
-autocmd FileType org :call<SID>LongLineHLToggle()
-
-" Allow color schemes to do bright colors without forcing bold.
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-    set t_Co=16
-endif
-
-let g:one_allow_italics = 1
-
-" Overriding vim's italic codes
-set t_ZH=^[[3m
-set t_ZR=^[[23m
-
-set fillchars=vert::
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -255,23 +222,18 @@ endif
 
 set t_Co=256
 
-set guifont="Iosevka"
-
-" Colorscheme
+" Colors don't work without this for some reason
 let &t_8f='[38;2;%lu;%lu;%lum'
 let &t_8b='[48;2;%lu;%lu;%lum'
+
+" Dark mode is the shit
 set background=dark
 
-let g:tokyonight_style = "night"
+" Colorscheme
+let g:tokyonight_style = 'night'
+let g:tokyonight_disable_italic_comment = 0
+let g:tokyonight_menu_selection_background = 'red'
 colorscheme tokyonight
-
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
-endif
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
@@ -290,6 +252,10 @@ set nobackup
 set nowb
 set noswapfile
 
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
+
 " Manually refresh file
 nmap <F5> :e!<cr>
 
@@ -305,10 +271,6 @@ set smarttab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
-
-" Linebreak on 500 characters
-" set lbr
-" set textwidth=80
 
 " Auto indent
 set ai
@@ -326,9 +288,9 @@ augroup open-tabs
 augroup end
 
 
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Visual mode related
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
@@ -361,12 +323,13 @@ imap <M-o> <esc><C-W>w
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>:tabclose<cr>gT
+map <leader>bc :Bclose<cr>
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
 map <leader>l :bnext<cr>
-map <leader>hh :bprevious<cr>
+map <leader>h :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -397,6 +360,9 @@ endtry
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" Ctags
+command! MakeTags !ctags -R .
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
@@ -416,9 +382,7 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
+map <leader>cs :call CleanExtraSpaces()<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -427,20 +391,6 @@ endif
 " Pressing <leader>ss will toggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-" Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
-map <leader>s? z=
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Notetaking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Executes a shellscript that i wrote for notetaking
-autocmd BufWritePost *note-*.md silent !build_note %:p
-
-" Compile RMarkdown
-autocmd FileType rmd map <F7> :!echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -449,16 +399,78 @@ autocmd FileType rmd map <F7> :!echo<space>"require(rmarkdown);<space>render('<c
 " noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " Quickly open a buffer for scribble
-map <leader>q :e ~/buffer<cr>
+map <leader>q :e ./buffer<cr>
 
 " Quickly open a markdown buffer for scribble
-map <leader>x :e ~/buffer.md<cr>
+map <leader>x :e ./buffer.md<cr>
 
 " Toggle paste mode on and off
-" map <leader>pp :setlocal paste!<cr>
+map <leader>pp :setlocal paste!<cr>
 
 " Use system clipboard
-set clipboard=unnamedplus
+" set clipboard=unnamedplus
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Turn persistent undo on
+"    means that you can undo even when you close a buffer/VIM
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+try
+    set undodir=~/.config/nvim/undodir
+    set undofile
+catch
+endtry
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Parenthesis/bracket
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $e <esc>`>a"<esc>`<i"<esc>
+
+" Highlight parentheses
+hi MatchParen guifg=NONE guibg=NONE gui=underline cterm=underline
+
+" Make ci( work like quotes do
+function! New_cib()
+    if search("(","bn") == line(".")
+        sil exe "normal! f)ci("
+        sil exe "normal! l"
+        startinsert
+    else
+        sil exe "normal! f(ci("
+        sil exe "normal! l"
+        startinsert
+    endif
+endfunction
+
+" And for curly brackets
+function! New_ciB()
+    if search("{","bn") == line(".")
+        sil exe "normal! f}ci{"
+        sil exe "normal! l"
+        startinsert
+    else
+        sil exe "normal! f{ci{"
+        sil exe "normal! l"
+        startinsert
+    endif
+endfunction
+
+nnoremap ci( :call New_cib()<CR>
+nnoremap cib :call New_cib()<CR>
+nnoremap ci{ :call New_ciB()<CR>
+nnoremap ciB :call New_ciB()<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Omni complete functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set omnifunc=syntaxcomplete#Complete
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -508,164 +520,53 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => GUI related
+" => Netrw
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set font according to system
-if has("mac") || has("macunix")
-    set gfn=IBM\ Plex\ Mono:h14,Hack:h14,Source\ Code\ Pro:h15,Menlo:h15
-elseif has("win16") || has("win32")
-    set gfn=IBM\ Plex\ Mono:h14,Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("gui_gtk2")
-    set gfn=IBM\ Plex\ Mono\ 14,:Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
-elseif has("linux")
-    set gfn=Iosevka\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
-elseif has("unix")
-    set gfn=Monospace\ 11
-endif
-
-" Disable scrollbars (real hackers don't use scrollbars for navigation!)
-set guioptions-=r
-set guioptions-=R
-set guioptions-=l
-set guioptions-=L
+let g:netrw_browse_split = 0
+let g:netrw_altfile = 1
+let g:netrw_banner=0
+let g:netrw_browse_split=4
+let g:netrw_altv=1
+let g:netrw_liststyle=3
+let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on
-"    means that you can undo even when you close a buffer/VIM
+" => Statusline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-try
-    set undodir=~/.config/nvim/undodir
-    set undofile
-catch
-endtry
+" This is overridden by lightline
+set noruler
+set laststatus=2
 
+" let g:currentmode={
+" 	\ 'n'  : 'n',
+" 	\ 'v'  : 'v',
+" 	\ 'V'  : 'vl',
+" 	\ '' : 'vb',
+" 	\ 's'  : 's',
+" 	\ 'S'  : 'sl',
+" 	\ '' : 'sb',
+" 	\ 'i'  : 'i',
+" 	\ 'R'  : 'r',
+"     \ 'Rv' : 'vr',
+" 	\ 'c'  : 'c',
+" 	\}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Command mode related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Smart mappings on the command line
-cno $h e ~/
-cno $d e ~/Desktop/
-cno $j e ./
-cno $c e <C-\>eCurrentFileDir("e")<cr>
-
-" $q is super useful when browsing on the command line
-" it deletes everything until the last slash
-cno $q <C-\>eDeleteTillSlash()<cr>
-
-" Bash like keys for the command line
-cnoremap <C-A>		<Home>
-cnoremap <C-E>		<End>
-cnoremap <C-K>		<C-U>
-
-cnoremap <C-P> <Up>
-cnoremap <C-N> <Down>
-
-" Map ½ to something useful
-map ½ $
-cmap ½ $
-imap ½ $
+" " Statusline format
+" set statusline+=%0*\ \ [%{g:currentmode[mode()]}]\ \ 
+" set statusline+=%1*\ %<%F\ 
+" set statusline+=%0*\ [%n]\ 
+" set statusline+=%1*\ %y\ 
+" set statusline+=%0*\ %{''.(&fenc!=''?&fenc:&enc).''}\ 
+" set statusline+=%1*\ %{&ff}\ 
+" set statusline+=%1*\ %=\ row:%l/%L\ (%03p%%)\ 
+" set statusline+=%0*\ \ col:%01c\ \ 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Parenthesis/bracket
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-vnoremap $1 <esc>`>a)<esc>`<i(<esc>
-vnoremap $2 <esc>`>a]<esc>`<i[<esc>
-vnoremap $3 <esc>`>a}<esc>`<i{<esc>
-vnoremap $$ <esc>`>a"<esc>`<i"<esc>
-vnoremap $q <esc>`>a'<esc>`<i'<esc>
-vnoremap $e <esc>`>a"<esc>`<i"<esc>
-
-" Highlight parentheses
-hi MatchParen guifg=NONE guibg=NONE gui=underline cterm=underline
-
-" Make ci( work like quotes do
-function! New_cib()
-    if search("(","bn") == line(".")
-        sil exe "normal! f)ci("
-        sil exe "normal! l"
-        startinsert
-    else
-        sil exe "normal! f(ci("
-        sil exe "normal! l"
-        startinsert
-    endif
-endfunction
-
-" And for curly brackets
-function! New_ciB()
-    if search("{","bn") == line(".")
-        sil exe "normal! f}ci{"
-        sil exe "normal! l"
-        startinsert
-    else
-        sil exe "normal! f{ci{"
-        sil exe "normal! l"
-        startinsert
-    endif
-endfunction
-
-nnoremap ci( :call New_cib()<CR>
-nnoremap cib :call New_cib()<CR>
-nnoremap ci{ :call New_ciB()<CR>
-nnoremap ciB :call New_ciB()<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General abbreviations
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-iab xdate <C-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Omni complete functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set omnifunc=syntaxcomplete#Complete
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-func! DeleteTillSlash()
-    let g:cmd = getcmdline()
-
-    if has("win16") || has("win32")
-        let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\]\\).*", "\\1", "")
-    else
-        let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*", "\\1", "")
-    endif
-
-    if g:cmd == g:cmd_edited
-        if has("win16") || has("win32")
-            let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\\]\\).*\[\\\\\]", "\\1", "")
-        else
-            let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*/", "\\1", "")
-        endif
-    endif
-
-    return g:cmd_edited
-endfunc
-
-func! CurrentFileDir(cmd)
-    return a:cmd . " " . expand("%:p:h") . "/"
-endfunc
-
-
-""""""""""""""""""""""""""""""
-" => HTML/jsx section
-""""""""""""""""""""""""""""""
-" `:Itag tagname` inserts the tag
-command! -nargs=1 Itag execute "normal a\<<args>\>\<\/<args>\>\<--\><esc>T>;"
-
-autocmd FileType html nnoremap <leader>;; :Itag 
-autocmd FileType javascript nnoremap <leader>;; :Itag 
-autocmd FileType jsx nnoremap <leader>;; :Itag 
-
-
-""""""""""""""""""""""""""""""
 " => Python section
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let python_highlight_all = 1
 au FileType python syn keyword pythonDecorator True None False self
 
@@ -686,11 +587,14 @@ au FileType python map <buffer> <leader>D ?def
 " Autoformat with black
 " autocmd BufWritePre *.py execute ':!black .'
 
+" Faster python startup
+let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/usr/bin/python3'
 
-""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => JavaScript section
-"""""""""""""""""""""""""""""""
-" au FileType javascript call JavaScriptFold()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType javascript setl fen
 au FileType javascript setl nocindent
 
@@ -700,78 +604,27 @@ au FileType javascript imap <C-a> alert();<esc>hi
 au FileType javascript inoremap <buffer> $r return 
 au FileType javascript inoremap <buffer> $f // --- PH<esc>FP2xi
 
-" rescan entire buffer and hightlight syntax when I enter a JavaScript or TypeScript buffer, and disable it when I leave:
+" Rescan entire buffer and hightlight syntax when I enter a JavaScript or TypeScript buffer, and disable it when I leave
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
 " Enable JSX Syntax Highlighing in javascript files
-let g:jsx_ext_required = 0 
+let g:jsx_ext_required = 0
 let g:vim_jsx_pretty_colorful_config = 1
 
-" function! JavaScriptFold() 
-"     setl foldmethod=syntax
-"     setl foldlevelstart=1
-"     syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
 
-"     function! FoldText()
-"         return substitute(getline(v:foldstart), '{.*', '{...}', '')
-"     endfunction
-"     setl foldtext=FoldText()
-" endfunction
-
-
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Markdown
-""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Disable markdown folding cuz it is annoying af
 let vim_markdown_folding_disabled = 1
 let g:markdown_syntax_conceal = 0
-autocmd FileType md set concealcursor="nc"
-autocmd FileType rmd set concealcursor="nc"
-
-
-""""""""""""""""""""""""""""""
-" => Netrw
-""""""""""""""""""""""""""""""
-let g:netrw_browse_split = 0
-let g:netrw_altfile = 1
-
-
-""""""""""""""""""""""""""""""
-" => FZF
-""""""""""""""""""""""""""""""
-let g:fzf_preview_window = ['right:50%', 'ctrl-/']
-let g:fzf_buffers_jump = 1
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-let g:fzf_tags_command = 'ctags -R'
-let g:fzf_commands_expect = 'alt-enter,ctrl-x'
-
-nmap <leader><leader> :GFiles<cr>
-nmap <leader>ff :Files<cr>
-nmap <leader>cc :Tags<cr>
-nmap <leader>/ :Ag 
-nmap <leader>fb :Buffers<cr>
-nmap <leader>fc :Commits<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerd Tree
+" => Abbreviations / Snippets
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:NERDTreeWinPos = "right"
-" let NERDTreeShowHidden=1
-" let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '.git']
-" let g:NERDTreeWinSize=35
-" map <leader>nn :NERDTreeToggle<cr>
-" map <leader>nb :NERDTreeFromBookmark<Space>
-" map <leader>nf :NERDTreeFind<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => surround.vim config
-" Annotate strings with gettext
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-vmap Si S(i_<esc>f)
-au FileType mako vmap Si S"i${ _(<esc>2f"a) }<esc>
+iab xdate <C-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -808,128 +661,6 @@ let g:lightline = {
       \ 'subseparator': { 'left': ' ', 'right': ' ' }
       \ }
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Emmet
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:user_emmet_install_global = 0
-" autocmd FileType html,css EmmetInstall
-" autocmd Filetype html imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-" autocmd Filetype css imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-" autocmd Filetype js nmap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Git gutter (Git diff)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:gitgutter_enabled=1
-nnoremap <silent> <leader>d :GitGutterToggle<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Sneak
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:sneak#label = 1
-
-" case insensitive sneak
-let g:sneak#use_ic_scs = 1
-
-" immediately move to the next instance of search, if you move the cursor sneak is back to default behavior
-let g:sneak#s_next = 1
-
-" Change the colors
-" highlight Sneak guifg=black guibg=#53BDFA ctermfg=black ctermbg=magenta
-" highlight SneakScope guifg=black guibg=#C2D94C ctermfg=red ctermbg=green
-
-" Cool prompts
-let g:sneak#prompt = 's> '
-
-" quickscope func
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Tmuxline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Gives a tmux statusline config matching to the vim statusline
-" let g:tmuxline_preset = {
-"       \'a'    : '#S',
-"       \'b'    : '#W',
-"       \'c'    : '#H',
-"       \'win'  : '#I #W',
-"       \'cwin' : '#I #W',
-"       \'x'    : '%a',
-"       \'y'    : '#W %R',
-"       \'z'    : '#H'}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VimWiki
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Notetaking madness
-" let g:vimwiki_list = [{'path': '~/secondbrain/',
-"             \ 'template_path': '~/secondbrain/templates/',
-"             \ 'template_default': 'default',
-"             \ 'syntax': 'markdown',
-"             \ 'ext': '.md',
-"             \ 'path_html': '~/secondbrain/site_html/',
-"             \ 'custom_wiki2html': 'vimwiki_markdown',
-"             \ 'template_ext': '.tpl'}]
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim Indent Line
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Get em fancy indent guides
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_showFirstIndentLevel = 0
-let g:indentLine_setColors = 0
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Matchtag
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:vim_matchtag_enable_by_default = 1
-let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'
-let g:vim_matchtag_both = 1
-
-highlight link matchTag Search
-highlight link matchTag MatchParen
-
-" Show an underline instead of hightlighting the tags
-" just a lil more subtle
-highlight matchTag gui=underline
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => CoC
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use tab for trigger completion with characters ahead and navigate.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => TreeSitter
@@ -955,3 +686,18 @@ require'nvim-treesitter.configs'.setup {
   }
 }
 EOF
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Tmuxline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Gives a tmux statusline config that matches the vim statusline
+" let g:tmuxline_preset = {
+"       \'a'    : '#S',
+"       \'b'    : '#W',
+"       \'c'    : '#H',
+"       \'win'  : '#I #W',
+"       \'cwin' : '#I #W',
+"       \'x'    : '%a',
+"       \'y'    : '#W %R',
+"       \'z'    : '#H'}
