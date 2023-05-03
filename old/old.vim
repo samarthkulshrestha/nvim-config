@@ -279,7 +279,10 @@ set ai
 set si
 
 " Line wrap
-set wrap
+" set wrap linebreak
+
+" Hard wrap at 80 characters
+set tw=80
 
 " Always open new files in new tabs
 augroup open-tabs
