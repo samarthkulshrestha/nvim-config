@@ -19,77 +19,58 @@ samarth kulshrestha
 
 <img src="assets/real_programmers.png" align="right" style="width: 50%" />
 
-Here is my [NeoVim](https://neovim.io) configuration.
-This config uses [vim-plug](https://github.com/junegunn/vim-plug) for managing plugins.
-Refer to the vim-plug readme for instructions.
+This is my [NeoVim](https://neovim.io) configuration. This config uses
+[packer.nvim](https://github.com/wbthomason/packer.nvim) for managing plugins.
+Refer to the packer readme for installation instructions.
 
-And yes the config is all one long-ass file,
-but it is divided into sections,
-it is working fine for me right now,
-might organise it later.
+The config is now written in [Lua](https://www.lua.org/) and each section of
+the configuration has been divided into separate files, stored inside the
+`lua` directory. `init.lua` then sources all of these files.
 
-## Usage
-
-These instructions are strictly for Unix OSes (Linux, MacOS, etc.),
-though there still might be some differences.
-If you use Windows, you're on your own mate,
-I'm sorry, just look up where to place the config files
-for Vim/NeoVim and you'll hopefully be all set.
+The old configuration files (both in VimScript and Lua) are stored under the
+`old` subdirectory.
 
 ![screenshot](assets/screenshot.png)
 
-### With NeoVim
+## Usage
 
--   Make a backup of your current config
+These instructions are for Unix OSes (Linux, MacOS, etc).
+
+-   Make a backup of your current config.
 
 ```
 mv ~/.config/nvim ~/.config/nvim_old
 ```
 
--   Clone this repo in the correct location
+-   Clear the NeoVim cache.
+
+```
+rm -rf ~/.local/share/nvim
+```
+
+-   Clone this repo in the correct location.
 
 ```
 git clone https://github.com/samarthkulshrestha/nvim-config.git ~/.config/nvim
 ```
 
--   Install vim-plug. [Instructions for NeoVim](https://github.com/junegunn/vim-plug#neovim).
+-   [Install packer.nvim.](https://github.com/wbthomason/packer.nvim#quickstart)
+
+```
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+```
 
 -   Open NeoVim and type
 
 ```
-:PlugInstall
-```
-
-And you're done.
-
-### With [Vim](https://www.vim.org)
-
--   Make a backup of your current config
-
-```
-mv ~/.vimrc ~/.vimrc_old
-```
-
--   Clone this repo, and copy the config file in the correct location
-
-```
-cd ~/Downloads
-git clone https://github.com/samarthkulshrestha/nvim-config.git
-cp ~/Downloads/nvim-config/init.vim ~/.vimrc
-```
-
--   Install vim-plug in this directory. [Instructions for Vim](https://github.com/junegunn/vim-plug#vim).
-
--   Open Vim and type:
-
-```
-:PlugInstall
+:PackerInstall
 ```
 
 And you're done.
 
 ## Licence
 
-Licensed under the DO WHATEVER THE FUCK YOU WANNA DO public licence.
+Licensed under the MIT Licence.
 
-(c) Samarth Kulshrestha, 2021
+Copyright (c) 2023 Samarth Kulshrestha.
