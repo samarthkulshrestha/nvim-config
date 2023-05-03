@@ -4,10 +4,9 @@
 samarth kulshrestha
 
 ![release version](https://img.shields.io/github/v/release/samarthkulshrestha/nvim-config?color=%23a039fa&include_prereleases&style=for-the-badge)
-![code quality](https://img.shields.io/codefactor/grade/github/samarthkulshrestha/nvim-config/main?style=for-the-badge)
 ![top language](https://img.shields.io/github/languages/top/samarthkulshrestha/nvim-config?color=%234877f7&style=for-the-badge)
-<br>
 ![license](https://img.shields.io/github/license/samarthkulshrestha/nvim-config?color=%23f2e85a&style=for-the-badge)
+<br>
 ![pre-release date](https://img.shields.io/github/release-date-pre/samarthkulshrestha/nvim-config?color=%23f76ad4&style=for-the-badge)
 ![repo size](https://img.shields.io/github/repo-size/samarthkulshrestha/nvim-config?color=%2346d4a0&style=for-the-badge)
 <br/><br/><br/>
