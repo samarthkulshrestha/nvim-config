@@ -17,7 +17,7 @@ samarth kulshrestha
 
 ## Introduction
 
-<img src="assets/real_programmers.png" align="center" style="margin: 16px;" />
+<img src="assets/real_programmers.png" style="margin-left: auto; margin-right: auto;" />
 
 Here is my [NeoVim](https://neovim.io) configuration.
 This config uses [vim-plug](https://github.com/junegunn/vim-plug) for managing plugins.
