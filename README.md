@@ -17,7 +17,7 @@ samarth kulshrestha
 
 ## Introduction
 
-![xkcd comic](assets/real_programmers.png)
+<img src="assets/real_programmers.png" align="center" style="margin: 16px;" />
 
 Here is my [NeoVim](https://neovim.io) configuration.
 This config uses [vim-plug](https://github.com/junegunn/vim-plug) for managing plugins.
