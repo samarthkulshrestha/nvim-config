@@ -26,10 +26,11 @@ The config is now written in [Lua](https://www.lua.org/) and each section of
 the configuration has been divided into separate files, stored inside the
 `lua` directory. `init.lua` then sources all of these files.
 
+### Screenshot
 ![screenshot](assets/screenshot.png)
 
 ## Licence
 
 Licensed under the MIT Licence.
 
-Copyright (c) 2023 Samarth Kulshrestha.
+Copyright (c) 2025 Samarth Kulshrestha.
