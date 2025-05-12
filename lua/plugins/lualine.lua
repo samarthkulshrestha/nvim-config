@@ -5,7 +5,7 @@ return {
         opts = {
             options = {
                 icons_enabled = false,
-                theme = 'auto',
+                theme = 'gruvbox-flat',
                 component_separators = { left = '', right = '' },
                 section_separators = { left = '', right = '' },
                 disabled_filetypes = {
@@ -41,8 +41,8 @@ return {
                 lualine_a = {
                     {
                         'tabs',
-                        tab_max_length = 40,
-                        max_length = vim.o.columns / 3,
+                        tab_max_length = 20,
+                        max_length = vim.o.columns,
                         mode = 2,
                         path = 0,
                         use_mode_colors = false,
