@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
 -- Abbreviations / Snippets
 -------------------------------------------------------------------------------
-vim.cmd [[iab xdate <C-r>=strftime("%d/%m/%y %H:%M:%S")<cr>]]
+vim.cmd [[iab xdate (<C-r>=strftime("%d-%m-%Y %H:%M:%S")<cr>)]]
 vim.cmd [[iab sk Samarth Kulshrestha]]
